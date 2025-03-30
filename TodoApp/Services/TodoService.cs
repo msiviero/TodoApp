@@ -39,4 +39,4 @@ public class TodoService : ITodoService
     }
 }
 
-public record TodoItem(string Title, bool IsCompleted);
+public record TodoItem(long Id, string Title, bool IsCompleted);
