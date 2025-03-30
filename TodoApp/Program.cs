@@ -1,7 +1,10 @@
 using TodoApp.Services;
+using Microsoft.EntityFrameworkCore;
+using TodoApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
