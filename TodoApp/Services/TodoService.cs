@@ -1,21 +1,26 @@
 
+using System.Runtime.CompilerServices;
+using TodoApp.Models;
+
 namespace TodoApp.Services;
 
 
 public interface ITodoService
 {
     List<TodoItem> GetAll();
-    TodoItem Get(long id);
-    TodoItem Create(TodoItem item);
+    TodoItem? Get(long id);
+    Task<TodoItem> Create(TodoItem item);
     TodoItem Edit(long id, TodoItem item);
     void Delete(long id);
 }
 
-public class TodoService : ITodoService
+public class TodoService(TodoContext _ctx) : ITodoService
 {
-    public TodoItem Create(TodoItem item)
+    public async Task<TodoItem> Create(TodoItem item)
     {
-        throw new NotImplementedException();
+        _ctx.TodoItems.Add(item);
+        await _ctx.SaveChangesAsync();
+        return item;
     }
 
     public void Delete(long id)
@@ -28,9 +33,9 @@ public class TodoService : ITodoService
         throw new NotImplementedException();
     }
 
-    public TodoItem Get(long id)
+    public TodoItem? Get(long id)
     {
-        throw new NotImplementedException();
+        return _ctx.TodoItems.Find(id);
     }
 
     public List<TodoItem> GetAll()
@@ -38,5 +43,3 @@ public class TodoService : ITodoService
         throw new NotImplementedException();
     }
 }
-
-public record TodoItem(long Id, string Title, bool IsCompleted);

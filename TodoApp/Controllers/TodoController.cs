@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Models;
 using TodoApp.Services;
 
 namespace TodoApp.Controllers;
@@ -14,15 +16,17 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<List<TodoItem>> Get(long id)
+    public ActionResult<TodoItem> Get(long id)
     {
-        return Ok(service.Get(id));
+        var todo = service.Get(id);
+        if (todo == null) return NotFound();
+        return todo;
     }
 
     [HttpPost]
-    public ActionResult<TodoItem> Create([FromBody] TodoItem item)
+    public async Task<ActionResult<TodoItem>> Create([FromBody] TodoItem item)
     {
-        service.Create(item);
+        await service.Create(item);
         return Created();
     }
 
