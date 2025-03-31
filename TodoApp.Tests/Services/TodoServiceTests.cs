@@ -64,6 +64,4 @@ public class TodoServiceTests
         mockSet.Verify(m => m.Add(It.Is<TodoItem>(x => x == item)), Times.Once);
         mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 }
