@@ -1,4 +1,4 @@
-namespace TodoApp.Tests;
+namespace TodoApp.Tests.Services;
 
 using TodoApp.Models;
 using TodoApp.Services;
