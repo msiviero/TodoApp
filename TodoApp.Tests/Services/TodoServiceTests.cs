@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 public class TodoServiceTests
 {
     [Fact]
-    public void ShouldFetchOneUser()
+    public void ShouldFetchOneTodo()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
@@ -25,10 +25,12 @@ public class TodoServiceTests
 
         Assert.NotNull(result);
         Assert.Equal(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false), result);
+
+        mockSet.Verify(m => m.Find(It.Is<long>(x => x == 7)), Times.Once);
     }
 
     [Fact]
-    public void ShouldFetchAllUsers()
+    public void ShouldFetchAllTodos()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
@@ -49,7 +51,7 @@ public class TodoServiceTests
     }
 
     [Fact]
-    public async Task ShouldCreateAUser()
+    public async Task ShouldCreateATodo()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
@@ -66,33 +68,40 @@ public class TodoServiceTests
     }
 
     [Fact]
-    public async Task ShouldEditAUser()
+    public async Task ShouldEditATodo()
     {
+        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
+        
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
+        mockSet.Setup(m => m.Find(It.Is<long>(x => x == 7))).Returns(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false));
 
         var underTest = new TodoService(mockContext.Object);
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
-        
         await underTest.Create(item);
-        
+
         var updatedItem = new TodoItem(Id: 7, Title: "Buy eggs", IsCompleted: true);
         await underTest.Edit(7, updatedItem);
 
+        mockSet.Verify(m => m.Find(It.Is<long>(x => x == 7)), Times.Once);
         mockSet.Verify(m => m.Update(It.Is<TodoItem>(x => x == updatedItem)), Times.Once);
-        mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
     }
 
     [Fact]
-    public async Task ShouldDeleteAUser()
+    public async Task ShouldDeleteATodo()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
+
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
-        
+        mockSet.Setup(m => m.Find(It.Is<long>(x => x == 7))).Returns(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false));
+
         var underTest = new TodoService(mockContext.Object);
         await underTest.Delete(7);
+
+        mockSet.Verify(m => m.Find(It.Is<long>(x => x == 7)), Times.Once);
         mockSet.Verify(m => m.Remove(It.Is<TodoItem>(x => x.Id == 7)), Times.Once);
         mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

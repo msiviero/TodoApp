@@ -8,9 +8,9 @@ public interface ITodoService
 {
     List<TodoItem> GetAll();
     TodoItem? Get(long id);
-    Task<TodoItem> Create(TodoItem item);
-    Task Edit(long id, TodoItem item);
-    Task Delete(long id);
+    Task<UpdateStatus> Create(TodoItem item);
+    Task<UpdateStatus> Edit(long id, TodoItem item);
+    Task<UpdateStatus> Delete(long id);
 }
 
 public class TodoService(Models.AppContext _ctx) : ITodoService
@@ -25,20 +25,41 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return _ctx.TodoItems.Find(id);
     }
 
-    public async Task<TodoItem> Create(TodoItem item)
+    public async Task<UpdateStatus> Create(TodoItem item)
     {
         _ctx.TodoItems.Add(item);
         await _ctx.SaveChangesAsync();
-        return item;
+        return new UpdateStatus(true, "Todo created");
     }
 
-    public Task Delete(long id)
+    public async Task<UpdateStatus> Delete(long id)
     {
-        throw new NotImplementedException();
+        var item = _ctx.TodoItems.Find(id);
+        if (item == null)
+        {
+            return new UpdateStatus(false, $"Todo with id:{id} not found");
+        }
+        _ctx.TodoItems.Remove(item);
+        await _ctx.SaveChangesAsync();
+        return new UpdateStatus(true, "Todo deleted");
     }
 
-    public Task Edit(long id, TodoItem item)
+    public async Task<UpdateStatus> Edit(long id, TodoItem item)
     {
-        throw new NotImplementedException();
+        if (id != item.Id)
+        {
+            return new UpdateStatus(false, "Id does not match");
+        }
+
+        var it = _ctx.TodoItems.Find(id);
+        if (it == null)
+        {
+            return new UpdateStatus(false, $"Todo with id:{id} not found");
+        }
+        _ctx.TodoItems.Update(new TodoItem(Id: id, Title: item.Title, IsCompleted: item.IsCompleted));
+        await _ctx.SaveChangesAsync();
+        return new UpdateStatus(true, "Todo updated");
     }
 }
+
+public record class UpdateStatus(bool Success, string Message);
