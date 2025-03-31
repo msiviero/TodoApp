@@ -2,7 +2,6 @@ namespace TodoApp.Tests.Services;
 
 using TodoApp.Models;
 using TodoApp.Services;
-using Moq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
