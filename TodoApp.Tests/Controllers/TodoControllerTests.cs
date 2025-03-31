@@ -34,5 +34,3 @@ public class TodoControllerTests
 
     }
 }
-
-// https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking?redirectedfrom=MSDN
