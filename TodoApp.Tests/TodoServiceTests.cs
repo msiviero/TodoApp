@@ -11,7 +11,7 @@ public class TodoServiceTests
     public void ShouldFetchOneUser()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
-        var mockContext = new Mock<TodoContext>(new DbContextOptions<TodoContext>());
+        var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
         mockSet.Setup(m => m.Find(It.Is<long>(x => x == 7))).Returns(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false));
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);

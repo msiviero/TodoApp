@@ -14,7 +14,7 @@ public interface ITodoService
     void Delete(long id);
 }
 
-public class TodoService(TodoContext _ctx) : ITodoService
+public class TodoService(Models.AppContext _ctx) : ITodoService
 {
     public async Task<TodoItem> Create(TodoItem item)
     {
