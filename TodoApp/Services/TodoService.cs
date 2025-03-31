@@ -9,8 +9,8 @@ public interface ITodoService
     List<TodoItem> GetAll();
     TodoItem? Get(long id);
     Task<TodoItem> Create(TodoItem item);
-    TodoItem Edit(long id, TodoItem item);
-    void Delete(long id);
+    Task Edit(long id, TodoItem item);
+    Task Delete(long id);
 }
 
 public class TodoService(Models.AppContext _ctx) : ITodoService
@@ -32,12 +32,12 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return item;
     }
 
-    public void Delete(long id)
+    public Task Delete(long id)
     {
         throw new NotImplementedException();
     }
 
-    public TodoItem Edit(long id, TodoItem item)
+    public Task Edit(long id, TodoItem item)
     {
         throw new NotImplementedException();
     }
