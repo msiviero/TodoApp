@@ -16,30 +16,31 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TodoItem> Get(long id)
+    public ActionResult<TodoItem> GetOne(long id)
     {
         var todo = service.Get(id);
-        if (todo == null) return NotFound();
-        return todo;
+        return todo == null ? NotFound() : Ok(todo);
     }
 
     [HttpPost]
     public async Task<ActionResult<TodoItem>> Create([FromBody] TodoItem item)
     {
-        await service.Create(item);
-        return Created();
+        var result = await service.Create(item);
+        // Using no param Created() constructor causes 204 to be returned due to a alleged bug. @see https://github.com/Azure/Azure-Functions/issues/2475
+        return result.Success ? Created("", null) : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<List<TodoItem>> Edit(long id, [FromBody] TodoItem item)
+    public async Task<ActionResult> Edit(long id, [FromBody] TodoItem item)
     {
-        return Ok(service.Edit(id, item));
+        var result = await service.Edit(id, item);
+        return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<List<TodoItem>> Delete(long id)
+    public async Task<ActionResult<List<TodoItem>>> Delete(long id)
     {
-        service.Delete(id);
-        return Ok();
+        var result = await service.Delete(id);
+        return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 }
