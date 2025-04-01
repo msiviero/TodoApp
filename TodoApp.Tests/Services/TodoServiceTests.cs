@@ -5,8 +5,6 @@ using TodoApp.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-// https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking?redirectedfrom=MSDN
-
 public class TodoServiceTests
 {
     [Fact]
