@@ -10,9 +10,9 @@ namespace TodoApp.Controllers;
 public class TodoController(ITodoService service) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<List<TodoItem>> GetAll()
+    public ActionResult<List<TodoItem>> GetAll(string q = "")
     {
-        return Ok(service.GetAll());
+        return Ok(service.GetAll(q));
     }
 
     [HttpGet("{id}")]

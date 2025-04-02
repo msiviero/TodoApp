@@ -9,6 +9,25 @@ namespace TodoApp.Tests.Controllers;
 public class TodoControllerTests
 {
     [Fact]
+    public void ShouldReturnAListOfTodos()
+    {
+        var items = new List<TodoItem>
+        {
+            new(1, "Buy milk", false),
+        };
+
+        var mockService = new Mock<ITodoService>();
+        mockService.Setup(s => s.GetAll(It.Is<string>(x => x == "milk"))).Returns(items);
+
+        var underTest = new TodoController(mockService.Object);
+
+        var result = underTest.GetAll("milk").Result;
+        Assert.IsType<OkObjectResult>(result);
+
+        mockService.Verify(s => s.GetAll(It.Is<string>(x => x == "milk")), Times.Once);
+    }
+
+    [Fact]
     public void ShouldReturnOkWithTodoIfTodoExists()
     {
         var mockService = new Mock<ITodoService>();
