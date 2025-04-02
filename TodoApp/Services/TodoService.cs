@@ -6,7 +6,7 @@ namespace TodoApp.Services;
 
 public interface ITodoService
 {
-    List<TodoItem> GetAll();
+    List<TodoItem> GetAll(string query = "");
     TodoItem? Get(long id);
     Task<UpdateStatus> Create(TodoItem item);
     Task<UpdateStatus> Edit(long id, TodoItem item);
@@ -15,9 +15,13 @@ public interface ITodoService
 
 public class TodoService(Models.AppContext _ctx) : ITodoService
 {
-    public List<TodoItem> GetAll()
+    public List<TodoItem> GetAll(string query = "")
     {
-        return [.. _ctx.TodoItems.AsQueryable()];
+        var items = _ctx.TodoItems
+            .AsQueryable()
+            .Where(x => x.Title.Contains(query));
+
+        return [.. items];
     }
 
     public TodoItem? Get(long id)

@@ -48,6 +48,27 @@ public class TodoServiceTests
     }
 
     [Fact]
+    public void ShouldFilterTodos() 
+    {
+        var mockSet = new Mock<DbSet<TodoItem>>();
+        var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
+
+         List<TodoItem> items = [
+            new(Id: 7,  Title: "Buy milk",  IsCompleted: false),
+            new(Id: 17, Title: "Buy bread", IsCompleted: true)
+        ];
+
+        mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
+        mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
+
+        var underTest = new TodoService(mockContext.Object);
+        var result = underTest.GetAll("milk");
+
+        Assert.NotNull(result);
+        Assert.Single(result);
+    }
+
+    [Fact]
     public async Task ShouldCreateATodo()
     {
         var mockSet = new Mock<DbSet<TodoItem>>();
