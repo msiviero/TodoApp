@@ -9,3 +9,6 @@ linux:
 
 osx:
 	@dotnet publish --self-contained --runtime osx-arm64
+
+test:
+	@dotnet test
