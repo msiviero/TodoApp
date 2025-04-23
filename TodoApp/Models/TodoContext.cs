@@ -9,13 +9,4 @@ public class AppContext(DbContextOptions<AppContext> options) : DbContext(option
     public virtual DbSet<TodoItem> TodoItems { get; set; } = null!;
 }
 
-public record TodoItem
-{
-    [Key]
-    public long Id { get; set; }
-
-    [Required]
-    public required string Title { get; set; }
-
-    public bool IsCompleted { get; set; }
-}
+public record TodoItem(string Key,  string Title, bool IsCompleted);

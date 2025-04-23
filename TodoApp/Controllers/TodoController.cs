@@ -16,7 +16,7 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TodoItem> GetOne(long id)
+    public ActionResult<TodoItem> GetOne(string id)
     {
         var todo = service.Get(id);
         return todo == null ? NotFound() : Ok(todo);
@@ -31,14 +31,14 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Edit(long id, [FromBody] TodoItem item)
+    public async Task<ActionResult> Edit(string id, [FromBody] TodoItem item)
     {
         var result = await service.Edit(id, item);
         return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<List<TodoItem>>> Delete(long id)
+    public async Task<ActionResult<List<TodoItem>>> Delete(string id)
     {
         var result = await service.Delete(id);
         return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);

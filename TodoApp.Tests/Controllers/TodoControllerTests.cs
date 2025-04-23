@@ -13,7 +13,7 @@ public class TodoControllerTests
     {
         var items = new List<TodoItem>
         {
-            new() {Id=1, Title="Buy milk", IsCompleted=false},
+            new("abc", "Buy milk", false),
         };
 
         var mockService = new Mock<ITodoService>();
@@ -31,15 +31,15 @@ public class TodoControllerTests
     public void ShouldReturnOkWithTodoIfTodoExists()
     {
         var mockService = new Mock<ITodoService>();
-        mockService.Setup(s => s.Get(It.Is<long>(x => x == 7))).Returns(new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false });
+        mockService.Setup(s => s.Get(It.Is<string>(x => x == "abc"))).Returns(new TodoItem("abc", "Buy milk", false));
 
         var underTest = new TodoController(mockService.Object);
-        var result = (OkObjectResult?)underTest.GetOne(7).Result;
+        var result = (OkObjectResult?)underTest.GetOne("abc").Result;
 
-        Assert.Equal(new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false }, result?.Value);
+        Assert.Equal(new TodoItem("abc", "Buy milk", false), result?.Value);
         Assert.Equal(StatusCodes.Status200OK, result?.StatusCode);
 
-        mockService.Verify(s => s.Get(It.Is<long>(x => x == 7)), Times.Once);
+        mockService.Verify(s => s.Get(It.Is<string>(x => x == "abc")), Times.Once);
     }
 
     [Fact]
@@ -48,17 +48,17 @@ public class TodoControllerTests
         var mockService = new Mock<ITodoService>();
 
         var underTest = new TodoController(mockService.Object);
-        var result = (NotFoundResult?)underTest.GetOne(7).Result;
+        var result = (NotFoundResult?)underTest.GetOne("abc").Result;
 
         Assert.Equal(StatusCodes.Status404NotFound, result?.StatusCode);
-        mockService.Verify(s => s.Get(It.Is<long>(x => x == 7)), Times.Once);
+        mockService.Verify(s => s.Get(It.Is<string>(x => x == "abc")), Times.Once);
     }
 
     [Fact]
     public async Task ShouldReturnCreatedWhenTodoIsCreated()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
         mockService.Setup(s => s.Create(It.Is<TodoItem>(x => x == item))).ReturnsAsync(new UpdateStatus(Success: true, Message: "Success"));
 
         var underTest = new TodoController(mockService.Object);
@@ -72,7 +72,7 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenTodoCantBeCreated()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
         mockService.Setup(s => s.Create(It.Is<TodoItem>(x => x == item))).ReturnsAsync(new UpdateStatus(Success: false, Message: "Error"));
 
         var underTest = new TodoController(mockService.Object);
@@ -86,17 +86,17 @@ public class TodoControllerTests
     public async Task ShouldReturnAcceptedWhenTodoIsEdited()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
 
         mockService
             .Setup(s => s.Edit(
-                It.Is<long>(x => x == 7),
+                It.Is<string>(x => x == "abc"),
                 It.Is<TodoItem>(x => x == item))
             )
             .ReturnsAsync(new UpdateStatus(Success: true, Message: "Success"));
 
         var underTest = new TodoController(mockService.Object);
-        var result = await underTest.Edit(7, item);
+        var result = await underTest.Edit("abc", item);
         var actualResult = (AcceptedResult?)result;
 
         Assert.Equal(StatusCodes.Status202Accepted, actualResult?.StatusCode);
@@ -106,17 +106,17 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenTodoCantBeEdited()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
 
         mockService
             .Setup(s => s.Edit(
-                It.Is<long>(x => x == 7),
+                It.Is<string>(x => x == "abc"),
                 It.Is<TodoItem>(x => x == item))
             )
             .ReturnsAsync(new UpdateStatus(Success: false, Message: "Error"));
 
         var underTest = new TodoController(mockService.Object);
-        var result = await underTest.Edit(7, item);
+        var result = await underTest.Edit("abc", item);
         var actualResult = (ObjectResult?)result;
 
         Assert.Equal(StatusCodes.Status500InternalServerError, actualResult?.StatusCode);
@@ -127,14 +127,14 @@ public class TodoControllerTests
     public async Task ShouldReturnOkWhenATodoIsDeleted()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
 
         mockService
-            .Setup(s => s.Delete(It.Is<long>(x => x == 7)))
+            .Setup(s => s.Delete(It.Is<string>(x => x == "abc")))
             .ReturnsAsync(new UpdateStatus(Success: true, Message: "Success"));
 
         var underTest = new TodoController(mockService.Object);
-        var result = await underTest.Delete(7);
+        var result = await underTest.Delete("abc");
         var actualResult = (AcceptedResult?)result.Result;
 
         Assert.Equal(StatusCodes.Status202Accepted, actualResult?.StatusCode);
@@ -144,14 +144,14 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenATodoCantBeDeleted()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
+        var item = new TodoItem("abc", "Buy milk", false);
 
         mockService
-            .Setup(s => s.Delete(It.Is<long>(x => x == 7)))
+            .Setup(s => s.Delete(It.Is<string>(x => x == "abc")))
             .ReturnsAsync(new UpdateStatus(Success: false, Message: "Error"));
 
         var underTest = new TodoController(mockService.Object);
-        var result = await underTest.Delete(7);
+        var result = await underTest.Delete("abc");
         var actualResult = (ObjectResult?)result.Result;
 
         Assert.Equal(StatusCodes.Status500InternalServerError, actualResult?.StatusCode);

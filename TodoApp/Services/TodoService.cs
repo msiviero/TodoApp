@@ -7,10 +7,10 @@ namespace TodoApp.Services;
 public interface ITodoService
 {
     List<TodoItem> GetAll(string query = "");
-    TodoItem? Get(long id);
+    TodoItem? Get(string id);
     Task<UpdateStatus> Create(TodoItem item);
-    Task<UpdateStatus> Edit(long id, TodoItem item);
-    Task<UpdateStatus> Delete(long id);
+    Task<UpdateStatus> Edit(string id, TodoItem item);
+    Task<UpdateStatus> Delete(string id);
 }
 
 public class TodoService(Models.AppContext _ctx) : ITodoService
@@ -24,7 +24,7 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return [.. items];
     }
 
-    public TodoItem? Get(long id)
+    public TodoItem? Get(string id)
     {
         return _ctx.TodoItems.Find(id);
     }
@@ -36,7 +36,7 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return new UpdateStatus(true, "Todo created");
     }
 
-    public async Task<UpdateStatus> Delete(long id)
+    public async Task<UpdateStatus> Delete(string id)
     {
         var item = _ctx.TodoItems.Find(id);
         if (item == null)
@@ -48,24 +48,19 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return new UpdateStatus(true, "Todo deleted");
     }
 
-    public async Task<UpdateStatus> Edit(long id, TodoItem item)
+    public async Task<UpdateStatus> Edit(string key, TodoItem item)
     {
-        if (id != item.Id)
+        if (key != item.Key)
         {
-            return new UpdateStatus(false, "Id does not match");
+            return new UpdateStatus(false, "Key does not match");
         }
 
-        var it = _ctx.TodoItems.Find(id);
+        var it = _ctx.TodoItems.Find(key);
         if (it == null)
         {
-            return new UpdateStatus(false, $"Todo with id:{id} not found");
+            return new UpdateStatus(false, $"Todo with id:{key} not found");
         }
-        _ctx.TodoItems.Update(new TodoItem()
-        {
-            Id = id,
-            Title = item.Title,
-            IsCompleted = item.IsCompleted,
-        });
+        _ctx.TodoItems.Update(new TodoItem(key, item.Title, item.IsCompleted));
         await _ctx.SaveChangesAsync();
         return new UpdateStatus(true, "Todo updated");
     }
