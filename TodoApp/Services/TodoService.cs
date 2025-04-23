@@ -60,7 +60,12 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         {
             return new UpdateStatus(false, $"Todo with id:{id} not found");
         }
-        _ctx.TodoItems.Update(new TodoItem(Id: id, Title: item.Title, IsCompleted: item.IsCompleted));
+        _ctx.TodoItems.Update(new TodoItem()
+        {
+            Id = id,
+            Title = item.Title,
+            IsCompleted = item.IsCompleted,
+        });
         await _ctx.SaveChangesAsync();
         return new UpdateStatus(true, "Todo updated");
     }

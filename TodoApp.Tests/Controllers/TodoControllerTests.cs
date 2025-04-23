@@ -13,7 +13,7 @@ public class TodoControllerTests
     {
         var items = new List<TodoItem>
         {
-            new(1, "Buy milk", false),
+            new() {Id=1, Title="Buy milk", IsCompleted=false},
         };
 
         var mockService = new Mock<ITodoService>();
@@ -31,12 +31,12 @@ public class TodoControllerTests
     public void ShouldReturnOkWithTodoIfTodoExists()
     {
         var mockService = new Mock<ITodoService>();
-        mockService.Setup(s => s.Get(It.Is<long>(x => x == 7))).Returns(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false));
+        mockService.Setup(s => s.Get(It.Is<long>(x => x == 7))).Returns(new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false });
 
         var underTest = new TodoController(mockService.Object);
         var result = (OkObjectResult?)underTest.GetOne(7).Result;
 
-        Assert.Equal(new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false), result?.Value);
+        Assert.Equal(new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false }, result?.Value);
         Assert.Equal(StatusCodes.Status200OK, result?.StatusCode);
 
         mockService.Verify(s => s.Get(It.Is<long>(x => x == 7)), Times.Once);
@@ -58,7 +58,7 @@ public class TodoControllerTests
     public async Task ShouldReturnCreatedWhenTodoIsCreated()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
         mockService.Setup(s => s.Create(It.Is<TodoItem>(x => x == item))).ReturnsAsync(new UpdateStatus(Success: true, Message: "Success"));
 
         var underTest = new TodoController(mockService.Object);
@@ -72,7 +72,7 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenTodoCantBeCreated()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
         mockService.Setup(s => s.Create(It.Is<TodoItem>(x => x == item))).ReturnsAsync(new UpdateStatus(Success: false, Message: "Error"));
 
         var underTest = new TodoController(mockService.Object);
@@ -86,7 +86,7 @@ public class TodoControllerTests
     public async Task ShouldReturnAcceptedWhenTodoIsEdited()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
 
         mockService
             .Setup(s => s.Edit(
@@ -106,7 +106,7 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenTodoCantBeEdited()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
 
         mockService
             .Setup(s => s.Edit(
@@ -127,7 +127,7 @@ public class TodoControllerTests
     public async Task ShouldReturnOkWhenATodoIsDeleted()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
 
         mockService
             .Setup(s => s.Delete(It.Is<long>(x => x == 7)))
@@ -144,7 +144,7 @@ public class TodoControllerTests
     public async Task ShouldReturnAnErrorWhenATodoCantBeDeleted()
     {
         var mockService = new Mock<ITodoService>();
-        var item = new TodoItem(Id: 7, Title: "Buy milk", IsCompleted: false);
+        var item = new TodoItem { Id = 7, Title = "Buy milk", IsCompleted = false };
 
         mockService
             .Setup(s => s.Delete(It.Is<long>(x => x == 7)))
