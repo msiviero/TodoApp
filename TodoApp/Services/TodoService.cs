@@ -7,7 +7,7 @@ namespace TodoApp.Services;
 public interface ITodoService
 {
     List<TodoItem> GetAll(string query = "");
-    TodoItem? Get(string id);
+    TodoItem? Get(string key);
     Task<UpdateStatus> Create(TodoItem item);
     Task<UpdateStatus> Edit(string id, TodoItem item);
     Task<UpdateStatus> Delete(string id);
@@ -24,9 +24,9 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return [.. items];
     }
 
-    public TodoItem? Get(string id)
+    public TodoItem? Get(string key)
     {
-        return _ctx.TodoItems.Find(id);
+        return _ctx.TodoItems.Find(key);
     }
 
     public async Task<UpdateStatus> Create(TodoItem item)
@@ -36,12 +36,12 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return new UpdateStatus(true, "Todo created");
     }
 
-    public async Task<UpdateStatus> Delete(string id)
+    public async Task<UpdateStatus> Delete(string key)
     {
-        var item = _ctx.TodoItems.Find(id);
+        var item = _ctx.TodoItems.Find(key);
         if (item == null)
         {
-            return new UpdateStatus(false, $"Todo with id:{id} not found");
+            return new UpdateStatus(false, $"Todo with key:{key} not found");
         }
         _ctx.TodoItems.Remove(item);
         await _ctx.SaveChangesAsync();
@@ -58,7 +58,7 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         var it = _ctx.TodoItems.Find(key);
         if (it == null)
         {
-            return new UpdateStatus(false, $"Todo with id:{key} not found");
+            return new UpdateStatus(false, $"Todo with key:{key} not found");
         }
         _ctx.TodoItems.Update(new TodoItem(key, item.Title, item.IsCompleted));
         await _ctx.SaveChangesAsync();

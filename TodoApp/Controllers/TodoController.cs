@@ -15,10 +15,10 @@ public class TodoController(ITodoService service) : ControllerBase
         return Ok(service.GetAll(q));
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<TodoItem> GetOne(string id)
+    [HttpGet("{key}")]
+    public ActionResult<TodoItem> GetOne(string key)
     {
-        var todo = service.Get(id);
+        var todo = service.Get(key);
         return todo == null ? NotFound() : Ok(todo);
     }
 
@@ -30,17 +30,17 @@ public class TodoController(ITodoService service) : ControllerBase
         return result.Success ? Created("", null) : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> Edit(string id, [FromBody] TodoItem item)
+    [HttpPut("{key}")]
+    public async Task<ActionResult> Edit(string key, [FromBody] TodoItem item)
     {
-        var result = await service.Edit(id, item);
+        var result = await service.Edit(key, item);
         return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<List<TodoItem>>> Delete(string id)
+    [HttpDelete("{key}")]
+    public async Task<ActionResult<List<TodoItem>>> Delete(string key)
     {
-        var result = await service.Delete(id);
+        var result = await service.Delete(key);
         return result.Success ? Accepted() : StatusCode(StatusCodes.Status500InternalServerError, result.Message);
     }
 }
