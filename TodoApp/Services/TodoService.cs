@@ -60,7 +60,7 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         {
             return new UpdateStatus(false, $"Todo with key:{key} not found");
         }
-        _ctx.TodoItems.Update(new TodoItem(key, item.Title, item.IsCompleted));
+        _ctx.TodoItems.Update(TodoItem.Create(key, item.Title, item.IsCompleted));
         await _ctx.SaveChangesAsync();
         return new UpdateStatus(true, "Todo updated");
     }

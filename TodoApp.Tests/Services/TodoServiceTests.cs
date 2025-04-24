@@ -13,7 +13,7 @@ public class TodoServiceTests
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(new TodoItem("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( TodoItem.Create("abc", "Buy milk", false));
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
 
         var underTest = new TodoService(mockContext.Object);
@@ -21,7 +21,7 @@ public class TodoServiceTests
         var result = underTest.Get("abc");
 
         Assert.NotNull(result);
-        Assert.Equal(new TodoItem("abc", "Buy milk", false), result);
+        Assert.Equal(TodoItem.Create("abc", "Buy milk", false), result);
 
         mockSet.Verify(m => m.Find(It.Is<string>(x => x == "abc")), Times.Once);
     }
@@ -33,8 +33,8 @@ public class TodoServiceTests
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
         List<TodoItem> items = [
-            new TodoItem("abc", "Buy milk", false),
-            new TodoItem("def", "Buy bread", true),
+             TodoItem.Create("abc", "Buy milk", false),
+             TodoItem.Create("def", "Buy bread", true),
         ];
 
         mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
@@ -54,8 +54,8 @@ public class TodoServiceTests
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
         List<TodoItem> items = [
-          new TodoItem("abc", "Buy milk", false),
-          new TodoItem("def", "Buy bread", true),
+           TodoItem.Create("abc", "Buy milk", false),
+           TodoItem.Create("def", "Buy bread", true),
        ];
 
         mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
@@ -77,7 +77,7 @@ public class TodoServiceTests
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
 
         var underTest = new TodoService(mockContext.Object);
-        var item = new TodoItem("abc", "Buy milk", false);
+        var item =  TodoItem.Create("abc", "Buy milk", false);
 
         await underTest.Create(item);
 
@@ -88,18 +88,18 @@ public class TodoServiceTests
     [Fact]
     public async Task ShouldEditATodo()
     {
-        var item = new TodoItem("abc", "Buy milk", false);
+        var item =  TodoItem.Create("abc", "Buy milk", false);
 
         var mockSet = new Mock<DbSet<TodoItem>>();
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(new TodoItem("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( TodoItem.Create("abc", "Buy milk", false));
 
         var underTest = new TodoService(mockContext.Object);
         await underTest.Create(item);
 
-        var updatedItem = new TodoItem("abc", "Buy eggs", true);
+        var updatedItem =  TodoItem.Create("abc", "Buy eggs", true);
         await underTest.Edit("abc", updatedItem);
 
         mockSet.Verify(m => m.Find(It.Is<string>(x => x == "abc")), Times.Once);
@@ -114,7 +114,7 @@ public class TodoServiceTests
         var mockContext = new Mock<AppContext>(new DbContextOptions<AppContext>());
 
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(new TodoItem("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( TodoItem.Create("abc", "Buy milk", false));
 
         var underTest = new TodoService(mockContext.Object);
         await underTest.Delete("abc");
