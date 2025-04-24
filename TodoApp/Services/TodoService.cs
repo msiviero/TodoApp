@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore;
 using TodoApp.Models;
 
 namespace TodoApp.Services;
@@ -44,8 +45,16 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
             return new UpdateStatus(false, $"Todo with key:{key} not found");
         }
         _ctx.TodoItems.Remove(item);
-        await _ctx.SaveChangesAsync();
-        return new UpdateStatus(true, "Todo deleted");
+        try
+        {
+            await _ctx.SaveChangesAsync();
+            return new UpdateStatus(true, "Todo deleted");
+
+        }
+        catch (DbUpdateException e)
+        {
+            return new UpdateStatus(false, e.Message);
+        }
     }
 
     public async Task<UpdateStatus> Edit(string key, TodoItem item)
