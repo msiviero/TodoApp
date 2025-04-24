@@ -16,14 +16,13 @@ public class AppContext(DbContextOptions<AppContext> options) : DbContext(option
 
 public record class TodoItem
 {
-    public static TodoItem Create(string key, string title, bool isCompleted)
+    public static TodoItem Create(string key, string title, bool isCompleted) => new()
     {
-        return new TodoItem {
-            Key = key,
-            Title = title,
-            IsCompleted = isCompleted,
-        };
-    }
+        Key = key,
+        Title = title,
+        IsCompleted = isCompleted,
+    };
+
 
     [Key]
     public required string Key { get; set; }
