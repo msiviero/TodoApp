@@ -23,7 +23,6 @@ public record class TodoItem
         IsCompleted = isCompleted,
     };
 
-
     [Key]
     public required string Key { get; set; }
     public required string Title { get; set; }
