@@ -7,10 +7,9 @@ var port = 5000;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(devCorsPolicyName, policy => policy.AllowAnyOrigin().AllowAnyHeader());
+    options.AddPolicy(devCorsPolicyName, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-builder.Services.AddHealthChecks();
 builder.Services.AddDbContext<TodoApp.Models.AppContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
