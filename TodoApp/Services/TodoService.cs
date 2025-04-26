@@ -14,7 +14,7 @@ public interface ITodoService
     Task<UpdateStatus> Delete(string id);
 }
 
-public class TodoService(Models.TodoAppContext _ctx) : ITodoService
+public class TodoService(TodoAppContext _ctx) : ITodoService
 {
     public List<Todo> GetAll(string query = "")
     {
