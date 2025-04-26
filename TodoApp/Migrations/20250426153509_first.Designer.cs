@@ -10,8 +10,8 @@ using TodoApp.Models;
 namespace TodoApp.Migrations
 {
     [DbContext(typeof(TodoAppContext))]
-    [Migration("20250426151728_migration_20250426171725")]
-    partial class migration_20250426171725
+    [Migration("20250426153509_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -5,7 +5,7 @@
 namespace TodoApp.Migrations
 {
     /// <inheritdoc />
-    public partial class migration_20250426171725 : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
