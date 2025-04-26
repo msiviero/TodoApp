@@ -60,7 +60,7 @@ localhost:5000/swagger
 To build the application run:
 
 ```
- dotnet publish TodoApp --self-contained --runtime linux-x64
+dotnet publish TodoApp --self-contained --runtime linux-x64
 ```
 
 You can use different runtimes if your server has different architecture than linux x64.
