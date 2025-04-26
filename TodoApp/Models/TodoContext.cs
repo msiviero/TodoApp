@@ -1,22 +1,18 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace TodoApp.Models;
 
-public class AppContext(DbContextOptions<AppContext> options) : DbContext(options)
+public class TodoAppContext(DbContextOptions<TodoAppContext> options) : DbContext(options)
 {
-    public virtual DbSet<TodoItem> TodoItems { get; set; } = null!;
-
-    protected override void OnConfiguring
-        (DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseInMemoryDatabase(databaseName: "TodoDB");
-    }
+    public virtual DbSet<Todo> TodoItems { get; set; } = null!;
 }
 
-public record class TodoItem
+[Table("todo")]
+public record class Todo
 {
-    public static TodoItem Create(string key, string title, bool isCompleted) => new()
+    public static Todo Create(string key, string title, bool isCompleted) => new()
     {
         Key = key,
         Title = title,

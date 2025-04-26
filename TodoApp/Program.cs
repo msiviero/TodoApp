@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(devCorsPolicyName, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-builder.Services.AddDbContext<TodoApp.Models.AppContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddDbContext<TodoApp.Models.TodoAppContext>(opt => opt.UseSqlite("Data Source=todo.db"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

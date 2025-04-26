@@ -10,20 +10,20 @@ namespace TodoApp.Controllers;
 public class TodoController(ITodoService service) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<List<TodoItem>> GetAll(string q = "")
+    public ActionResult<List<Todo>> GetAll(string q = "")
     {
         return Ok(service.GetAll(q));
     }
 
     [HttpGet("{key}")]
-    public ActionResult<TodoItem> GetOne(string key)
+    public ActionResult<Todo> GetOne(string key)
     {
         var todo = service.Get(key);
         return todo == null ? NotFound() : Ok(todo);
     }
 
     [HttpPost]
-    public async Task<ActionResult<TodoItem>> Create([FromBody] TodoItem item)
+    public async Task<ActionResult<Todo>> Create([FromBody] Todo item)
     {
         try
         {
@@ -38,7 +38,7 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpPut("{key}")]
-    public async Task<ActionResult> Edit(string key, [FromBody] TodoItem item)
+    public async Task<ActionResult> Edit(string key, [FromBody] Todo item)
     {
         try
         {
@@ -52,7 +52,7 @@ public class TodoController(ITodoService service) : ControllerBase
     }
 
     [HttpDelete("{key}")]
-    public async Task<ActionResult<List<TodoItem>>> Delete(string key)
+    public async Task<ActionResult<List<Todo>>> Delete(string key)
     {
         try
         {

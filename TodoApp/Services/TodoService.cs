@@ -7,16 +7,16 @@ namespace TodoApp.Services;
 
 public interface ITodoService
 {
-    List<TodoItem> GetAll(string query = "");
-    TodoItem? Get(string key);
-    Task<UpdateStatus> Create(TodoItem item);
-    Task<UpdateStatus> Edit(string id, TodoItem item);
+    List<Todo> GetAll(string query = "");
+    Todo? Get(string key);
+    Task<UpdateStatus> Create(Todo item);
+    Task<UpdateStatus> Edit(string id, Todo item);
     Task<UpdateStatus> Delete(string id);
 }
 
-public class TodoService(Models.AppContext _ctx) : ITodoService
+public class TodoService(Models.TodoAppContext _ctx) : ITodoService
 {
-    public List<TodoItem> GetAll(string query = "")
+    public List<Todo> GetAll(string query = "")
     {
         var items = _ctx.TodoItems
             .AsQueryable()
@@ -25,12 +25,12 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         return [.. items];
     }
 
-    public TodoItem? Get(string key)
+    public Todo? Get(string key)
     {
         return _ctx.TodoItems.Find(key);
     }
 
-    public async Task<UpdateStatus> Create(TodoItem item)
+    public async Task<UpdateStatus> Create(Todo item)
     {
         _ctx.TodoItems.Add(item);
         await _ctx.SaveChangesAsync();
@@ -57,7 +57,7 @@ public class TodoService(Models.AppContext _ctx) : ITodoService
         }
     }
 
-    public async Task<UpdateStatus> Edit(string key, TodoItem item)
+    public async Task<UpdateStatus> Edit(string key, Todo item)
     {
         if (key != item.Key)
         {
