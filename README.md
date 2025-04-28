@@ -77,7 +77,7 @@ dotnet ef migrations add YourMigrationName
 
 To update the migrations against the database run:
 ```
-dotnet ef database update
+dotnet ef --project TodoApp database update
 ```
 
 ### Unit Tests
