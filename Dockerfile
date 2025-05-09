@@ -10,4 +10,7 @@ RUN dotnet publish TodoApp --self-contained  -o app
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine
 WORKDIR /TodoApp
 COPY --from=build /TodoApp/app .
+RUN apk add --update \
+    curl \
+    && rm -rf /var/cache/apk/*
 ENTRYPOINT ["./TodoApp"]
