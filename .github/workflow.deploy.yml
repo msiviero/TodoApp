@@ -1,0 +1,15 @@
+name: deploy project
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - '**'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Coolify
+        run: | 
+         [ $(curl --request GET 'https://coolify.sandbox.app-deploy.xyz/api/v1/deploy?uuid=is40wo0gwswoscs00w4kkswc&force=false' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}' -o /dev/stderr -w "%{http_code}") -eq 200 ]
