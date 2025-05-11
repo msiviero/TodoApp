@@ -29,5 +29,3 @@ jobs:
       - name: Deploy to Coolify
         run: | 
          [ $(curl --request GET 'https://coolify.sandbox.app-deploy.xyz/api/v1/deploy?uuid=${{ vars.COOLIFY_APP_ID }}&force=false' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}' -o /dev/stderr -w "%{http_code}") -eq 200 ]
-
-# Server=49.13.31.168;Port=5432;Database=todos;User Id=postgres;Password=6EExWC0olgUqY4RUq6actOCaMiqi6MoM49jC5qRJAzTAYooC79eTZyb7LrL6Lme5;
