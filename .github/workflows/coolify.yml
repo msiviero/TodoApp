@@ -5,6 +5,7 @@ on:
   push:
     tags:
     - '**'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -19,6 +20,11 @@ jobs:
       
       - name: Test
         run : dotnet test
+
+      - name: Apply migrations
+        run : |
+          dotnet tool install --global dotnet-ef
+          dotnet ef --project TodoApp database update --connection "connection string"
 
       - name: Deploy to Coolify
         run: | 
