@@ -14,6 +14,7 @@ builder.Services.AddDbContext<TodoApp.Models.TodoAppContext>(opt => opt.UseSqlit
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<ITodoService, TodoService>();
 
 var app = builder.Build();
