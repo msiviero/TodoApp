@@ -1,0 +1,22 @@
+name: deploy on coolify
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - '**'
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Setup dotnet
+        uses: 'actions/setup-dotnet@v4'
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Deploy to Coolify
+        run: | 
+         [ $(curl --request GET 'https://coolify.sandbox.app-deploy.xyz/api/v1/deploy?uuid=${{ vars.COOLIFY_APP_ID }}&force=false' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}' -o /dev/stderr -w "%{http_code}") -eq 200 ]
