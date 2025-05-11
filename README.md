@@ -72,7 +72,7 @@ The application uses a SQLite database to store todo items. The schema is manage
 To create a new migration run:
 
 ```
-dotnet ef migrations add YourMigrationName
+dotnet ef --project TodoApp migrations add YourMigrationName
 ```
 
 To update the migrations against the database run:

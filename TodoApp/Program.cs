@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(devCorsPolicyName, policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-builder.Services.AddDbContext<TodoApp.Models.TodoAppContext>(opt => opt.UseSqlite("Data Source=todo.db"));
+builder.Services.AddDbContext<TodoApp.Models.TodoAppContext>(opt => opt.UseNpgsql("Server=127.0.0.1;Port=5432;Database=todos;User Id=postgres;Password=password;"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
