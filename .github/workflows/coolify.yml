@@ -24,7 +24,7 @@ jobs:
       - name: Apply migrations
         run : |
           dotnet tool install --global dotnet-ef
-          dotnet ef --project TodoApp database update --connection "connection string"
+          dotnet ef --project TodoApp database update --connection "${{ secrets.PG_CONNECTION }}"
 
       - name: Deploy to Coolify
         run: | 
