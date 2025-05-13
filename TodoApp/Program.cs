@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var devCorsPolicyName = "_dev";
 var prodCorsPolicyName = "_prod";
 
-var port = 5000;
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -32,7 +32,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors(devCorsPolicyName);
-} else {
+}
+else
+{
     app.UseCors(prodCorsPolicyName);
 }
 
