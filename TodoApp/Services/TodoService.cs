@@ -14,7 +14,7 @@ public interface ITodoService
     Task<UpdateStatus> Delete(string id);
 }
 
-public class TodoService(TodoAppContext _ctx) : ITodoService
+public class TodoService(TodoAppContext _ctx, ITimeService time) : ITodoService
 {
     public List<Todo> GetAll(string query = "")
     {
@@ -32,6 +32,10 @@ public class TodoService(TodoAppContext _ctx) : ITodoService
 
     public async Task<UpdateStatus> Create(Todo item)
     {
+        var now = time.Now();
+        item.CreatedAt = now;
+        item.LastModifiedAt = now;
+
         _ctx.TodoItems.Add(item);
         await _ctx.SaveChangesAsync();
         return new UpdateStatus(true, "Todo created");
@@ -73,6 +77,7 @@ public class TodoService(TodoAppContext _ctx) : ITodoService
         it.Key = key;
         it.Title = item.Title;
         it.IsCompleted = item.IsCompleted;
+        it.LastModifiedAt = time.Now();
 
         _ctx.TodoItems.Update(it);
         await _ctx.SaveChangesAsync();

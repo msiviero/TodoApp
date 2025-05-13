@@ -12,16 +12,18 @@ public class TodoServiceTests
     {
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( Todo.Create("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false));
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
-        var underTest = new TodoService(mockContext.Object);
 
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
         var result = underTest.Get("abc");
 
         Assert.NotNull(result);
-        Assert.Equal(Todo.Create("abc", "Buy milk", false), result);
+        Assert.Equal(Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false), result);
 
         mockSet.Verify(m => m.Find(It.Is<string>(x => x == "abc")), Times.Once);
     }
@@ -31,16 +33,18 @@ public class TodoServiceTests
     {
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
         List<Todo> items = [
-             Todo.Create("abc", "Buy milk", false),
-             Todo.Create("def", "Buy bread", true),
+             Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false),
+             Todo.Create("def", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy bread", true),
         ];
 
         mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
-        var underTest = new TodoService(mockContext.Object);
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
         var result = underTest.GetAll();
 
         Assert.NotNull(result);
@@ -52,16 +56,18 @@ public class TodoServiceTests
     {
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
         List<Todo> items = [
-           Todo.Create("abc", "Buy milk", false),
-           Todo.Create("def", "Buy bread", true),
+           Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false),
+           Todo.Create("def", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1),"Buy bread", true),
        ];
 
         mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
-        var underTest = new TodoService(mockContext.Object);
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
         var result = underTest.GetAll("milk");
 
         Assert.NotNull(result);
@@ -73,11 +79,13 @@ public class TodoServiceTests
     {
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
 
-        var underTest = new TodoService(mockContext.Object);
-        var item =  Todo.Create("abc", "Buy milk", false);
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
+        var item = Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false);
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
         await underTest.Create(item);
 
@@ -88,18 +96,20 @@ public class TodoServiceTests
     [Fact]
     public async Task ShouldEditATodo()
     {
-        var item =  Todo.Create("abc", "Buy milk", false);
+        var item = Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false);
 
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( Todo.Create("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false));
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
-        var underTest = new TodoService(mockContext.Object);
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
         await underTest.Create(item);
 
-        var updatedItem =  Todo.Create("abc", "Buy eggs", true);
+        var updatedItem = Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy eggs", true);
         await underTest.Edit("abc", updatedItem);
 
         mockSet.Verify(m => m.Find(It.Is<string>(x => x == "abc")), Times.Once);
@@ -112,11 +122,13 @@ public class TodoServiceTests
     {
         var mockSet = new Mock<DbSet<Todo>>();
         var mockContext = new Mock<TodoAppContext>(new DbContextOptions<TodoAppContext>());
+        var mockTimeService = new Mock<ITimeService>();
 
         mockContext.Setup(c => c.TodoItems).Returns(mockSet.Object);
-        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns( Todo.Create("abc", "Buy milk", false));
+        mockSet.Setup(m => m.Find(It.Is<string>(x => x == "abc"))).Returns(Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false));
+        mockTimeService.Setup(m => m.Now()).Returns(new DateTime(2023, 1, 1));
 
-        var underTest = new TodoService(mockContext.Object);
+        var underTest = new TodoService(mockContext.Object, mockTimeService.Object);
         await underTest.Delete("abc");
 
         mockSet.Verify(m => m.Find(It.Is<string>(x => x == "abc")), Times.Once);

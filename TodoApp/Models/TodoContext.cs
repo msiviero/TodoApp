@@ -12,15 +12,25 @@ public class TodoAppContext(DbContextOptions<TodoAppContext> options) : DbContex
 [Table("todo")]
 public record class Todo
 {
-    public static Todo Create(string key, string title, bool isCompleted) => new()
-    {
-        Key = key,
-        Title = title,
-        IsCompleted = isCompleted,
-    };
+    public static Todo Create(
+        string key,
+        DateTime CreatedAt,
+        DateTime LastModifiedAt,
+        string title,
+        bool isCompleted
+        ) => new()
+        {
+            Key = key,
+            Title = title,
+            IsCompleted = isCompleted,
+            CreatedAt = CreatedAt,
+            LastModifiedAt = LastModifiedAt,
+        };
 
     [Key]
     public required string Key { get; set; }
     public required string Title { get; set; }
     public bool IsCompleted { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime LastModifiedAt { get; set; }
 }
