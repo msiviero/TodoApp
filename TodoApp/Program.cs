@@ -23,8 +23,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<ITodoService, TodoService>();
-builder.Services.AddSingleton<ITimeService, TimeService>();
+builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<ITimeService, TimeService>();
 
 var app = builder.Build();
 
