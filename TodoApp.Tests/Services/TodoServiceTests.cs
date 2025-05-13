@@ -37,7 +37,7 @@ public class TodoServiceTests
 
         List<Todo> items = [
              Todo.Create("abc", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy milk", false),
-             Todo.Create("def", new DateTime(2023, 1, 1), new DateTime(2023, 1, 1), "Buy bread", true),
+             Todo.Create("def", new DateTime(2022, 1, 1), new DateTime(2022, 1, 1), "Buy bread", true),
         ];
 
         mockSet.Setup(m => m.AsQueryable()).Returns(items.AsQueryable());
@@ -49,6 +49,7 @@ public class TodoServiceTests
 
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
+        Assert.Equal("def", result[0].Key);
     }
 
     [Fact]

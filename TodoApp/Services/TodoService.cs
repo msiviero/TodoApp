@@ -20,7 +20,8 @@ public class TodoService(TodoAppContext _ctx, ITimeService time) : ITodoService
     {
         var items = _ctx.TodoItems
             .AsQueryable()
-            .Where(x => x.Title.Contains(query));
+            .Where(x => x.Title.Contains(query))
+            .OrderBy(x => x.CreatedAt);
 
         return [.. items];
     }
