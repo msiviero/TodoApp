@@ -22,6 +22,8 @@ To run the sample you need the following tools installed on your machine:
 
 * .NET Core SDK
 * Entity framework core tools (ef)
+* A local postgresql instance (for development)
+* Docker (to run a postgresql instance with the provided docker compose file)
 
 To install the Entity framework core tools, open a terminal and run the following commands:
 
@@ -67,7 +69,14 @@ You can use different runtimes if your server has different architecture than li
 
 ### Database
 
-The application uses a SQLite database to store todo items. The schema is managed by Entity Framework Core.
+The application uses a Postgresql database to store todo items. The schema is managed by Entity Framework Core.
+
+To simplify development there is a docker compose file that can be used to create a local Postgresql instance in "/docker-local" directory.
+
+To run it run, inside the directory:
+```
+docker compose up
+```
 
 To create a new migration run:
 
