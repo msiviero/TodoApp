@@ -31,6 +31,6 @@ public record class Todo
     public required string Key { get; set; }
     public required string Title { get; set; }
     public bool IsCompleted { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime LastModifiedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
+    public DateTime LastModifiedAt { get; set; } = DateTime.Now.ToUniversalTime();
 }
